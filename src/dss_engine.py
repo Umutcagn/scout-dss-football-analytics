@@ -60,10 +60,18 @@ ALL_METRICS = [
     "Interceptions_per90", "Tackles_per90", "Pass_Accuracy_Pct", "Shot_Accuracy_Pct",
     "xT_per90", "Pack_Rate", "PADJ_Tackles_per90", "High_Turnovers_per90",
     "PPDA_Contribution", "PSxG_Net", "xG_per_Shot", "xG_Buildup_per90",
-    # Sofascore Live Ratings
+    # Sofascore-style ratings (fixed per-position defaults in the shipped dataset)
     "Sofascore_Attacking", "Sofascore_Creativity", "Sofascore_Technical",
     "Sofascore_Defending", "Sofascore_Tactical"
 ]
+
+
+# Data provenance (see src/real_data_pipeline.py): only these metrics come from Understat
+# season data. The rest are simulated per position with np.random, and the Sofascore
+# ratings are fixed per-position defaults, so they carry no player-specific signal.
+REAL_METRICS = ["xG_per90", "xA_per90", "Key_Passes_per90", "xG_per_Shot", "xG_Buildup_per90"]
+FIXED_DEFAULT_METRICS = [m for m in ALL_METRICS if m.startswith("Sofascore_")]
+SIMULATED_METRICS = [m for m in ALL_METRICS if m not in REAL_METRICS and m not in FIXED_DEFAULT_METRICS]
 
 
 class DSSEngine:
@@ -214,7 +222,9 @@ class DSSEngine:
         target_vector = target_row[vector_cols].values.reshape(1, -1).astype(float)
         candidate_vectors = candidates[vector_cols].values.astype(float)
 
-        similarities = cosine_similarity(target_vector, candidate_vectors)[0]
+        # Center percentiles on the median (50) so the similarity reflects above/below-average
+        # profile shape; on raw all-positive percentiles almost every pair scores 0.8-0.95
+        similarities = cosine_similarity(target_vector - 50.0, candidate_vectors - 50.0)[0]
         similarity_pct = np.round(similarities * 100.0, 1)
 
         candidates["Similarity_Pct"] = similarity_pct

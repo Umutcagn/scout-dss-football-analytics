@@ -9,7 +9,7 @@ import plotly.express as px
 
 from src.real_data_pipeline import main as generate_real_data
 from src.normalizer import MetricNormalizer
-from src.dss_engine import DSSEngine, ALL_METRICS
+from src.dss_engine import DSSEngine, ALL_METRICS, REAL_METRICS
 from src.visualizer import ScoutVisualizer, METRIC_LABELS
 from src.scouting_roles import TACTICAL_ROLES, get_role_weights, METRIC_CLUSTERS
 from src.report_generator import generate_opta_scout_report
@@ -294,11 +294,17 @@ def render_player_profile_dossier(player_row: pd.Series, df: pd.DataFrame, engin
 
 def main() -> None:
     # Header Banner
-    st.title("⚽ ScoutEduard Pro - Endüstri Standardı Karar Destek Platformu")
+    st.title("⚽ ScoutEduard - Scouting Karar Destek Prototipi")
     st.markdown(
-        "**SciSports, Wyscout, Opta & StatsBomb Standartlarında Scouting Altyapısı:** "
-        "2.000+ Gerçek Futbolcu, **Taktiksel Rol Profilleri**, **Wyscout Yüzdelik Pizza Grafikleri**, "
-        "**TOPSIS Skorlama**, **Birebir Kıyaslama** ve **Google Data Verifier Ajanı**."
+        "Top 5 lig oyuncuları için **taktiksel rol profilleri**, **yüzdelik pizza grafikleri**, "
+        "**TOPSIS skorlama**, **vektör benzerliği** ve **birebir kıyaslama**."
+    )
+    st.warning(
+        "**Veri kaynağı:** Yalnızca " + ", ".join(METRIC_LABELS[m] for m in REAL_METRICS) +
+        " ve oynanan dakika Understat 2025/26 sezon verisinden gelir. "
+        "**(simüle)** etiketli metrikler mevkiye göre rastgele üretilmiştir; **(mevki sabiti)** etiketli "
+        "puanlar aynı mevkideki herkese aynı değeri verir. Yaş ve piyasa değeri büyük ölçüde tahminidir. "
+        "Sıralamalar yöntemi göstermek içindir, gerçek scouting kararı için kullanılmamalıdır."
     )
     st.divider()
 
@@ -312,8 +318,8 @@ def main() -> None:
 
     # Data Verifier Agent Trigger Button in Sidebar
     st.sidebar.subheader("🤖 Otomatik Veri Doğrulama Ajanı")
-    if st.sidebar.button("🔍 Verileri Google & Transfermarkt İle Teyit Et"):
-        with st.spinner("Google & Transfermarkt Doğrulama Ajanı çalışıyor..."):
+    if st.sidebar.button("🔍 Veri Tutarlılık Kontrolü (yerel kurallar)"):
+        with st.spinner("Yerel doğrulama listesi ve sınır kontrolleri uygulanıyor..."):
             verifier_agent = RealDataVerifierAgent()
             audit_summary = verifier_agent.run_full_audit()
             st.cache_data.clear()

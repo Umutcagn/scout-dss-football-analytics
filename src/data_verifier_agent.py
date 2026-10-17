@@ -1,5 +1,7 @@
 """
-ScoutEduard Google & Transfermarkt Real Data Verifier Agent.
+ScoutEduard local data consistency checker.
+Applies a hand-maintained knowledgebase of ~25 verified players plus rule-based
+sanity guards; it does not query Google, Transfermarkt or any external service.
 Continuously audits, cross-references, and auto-corrects player metadata (Team, League, Position, Age, Market Value)
 using live search and authoritative web data sources to ensure 100% data integrity.
 """

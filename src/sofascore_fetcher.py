@@ -1,13 +1,13 @@
 """
-Sofascore Live Attribute & Real Age Fetcher.
-Queries Sofascore internal endpoints using tls_requests to extract
-100% REAL player birth dates, calculated exact ages, and live ratings.
+Sofascore attribute & age fetcher (experimental).
+Queries Sofascore's unofficial internal endpoints using tls_requests. These endpoints are not
+a public API; check Sofascore's terms before use. The shipped dataset does not use this fetcher
+for ratings (see _generate_fallback_attributes).
 """
 
 import datetime
 from typing import Dict, Any, Optional
 import urllib.parse
-import tls_requests
 
 
 class SofascoreFetcher:
@@ -38,6 +38,8 @@ class SofascoreFetcher:
         }
 
         try:
+            import tls_requests  # optional dependency, only needed for live lookups
+
             res = tls_requests.get(search_url, headers=self.headers)
             if res.status_code == 200:
                 results = res.json().get("results", [])

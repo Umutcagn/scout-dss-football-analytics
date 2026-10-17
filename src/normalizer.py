@@ -25,7 +25,7 @@ METRIC_COLUMNS = [
     "PSxG_Net",
     "xG_per_Shot",
     "xG_Buildup_per90",
-    # Sofascore Live Ratings
+    # Sofascore-style ratings (fixed per-position defaults in the shipped dataset)
     "Sofascore_Attacking",
     "Sofascore_Creativity",
     "Sofascore_Technical",

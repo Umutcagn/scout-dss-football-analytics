@@ -269,7 +269,7 @@ def build_real_player_dataset() -> pd.DataFrame:
                 "PSxG_Net": psxg_net,
                 "xG_per_Shot": xg_per_shot,
                 "xG_Buildup_per90": xg_buildup_p90,
-                # Sofascore Live Attributes
+                # Sofascore-style attributes: fixed per-position defaults (live fetch is not used here)
                 "Sofascore_Attacking": sofa_attrs["Sofascore_Attacking"],
                 "Sofascore_Creativity": sofa_attrs["Sofascore_Creativity"],
                 "Sofascore_Technical": sofa_attrs["Sofascore_Technical"],
@@ -291,7 +291,7 @@ def build_real_player_dataset() -> pd.DataFrame:
             player_id_counter += 1
 
     df_result = pd.DataFrame(real_rows)
-    print(f"Successfully generated dataset with Sofascore Live Ratings for {len(df_result)} players!")
+    print(f"Successfully generated dataset with per-position default ratings for {len(df_result)} players!")
     return df_result
 
 
